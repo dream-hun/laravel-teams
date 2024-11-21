@@ -13,4 +13,9 @@ class UserObserver
             $team = Team::create(['name' => $user->name])
         );
     }
+
+    public function deleting(User $user)
+    {
+        $user->teams()->detach();
+    }
 }
