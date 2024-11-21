@@ -27,6 +27,6 @@ class TeamController extends Controller
     {
         $team->update($request->only('name'));
 
-        return back();
+        return back()->withStatus('team-updated');
     }
 }
