@@ -71,7 +71,11 @@
 
                         @foreach(auth()->user()->teams as $team)
                             <x-dropdown-link>
-                                {{ $team->name }}
+                                <form action="{{ route('team.set-current', $team) }}" method="post">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit">{{ $team->name }}</button>
+                                </form>
                             </x-dropdown-link>
                         @endforeach
                     </x-slot>
