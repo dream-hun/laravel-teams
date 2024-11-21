@@ -29,3 +29,26 @@ it('can not switch to a team that the user does not belong to', function () {
 
     expect($user->currentTeam->id)->not->toBe($anotherTeam->id);
 });
+
+it('can update team', function () {
+    $user = User::factory()->create();
+
+    actingAs($user)
+        ->patch(route('team.update', $user->currentTeam), [
+            'name' => $name = 'A new team name'
+        ])
+        ->assertRedirect();
+
+    expect($user->fresh()->currentTeam->name)->toBe($name);
+});
+
+it('can not update if not in team', function () {
+    $user = User::factory()->create();
+    $anotherUser = User::factory()->create();
+
+    actingAs($user)
+        ->patch(route('team.update', $anotherUser->currentTeam), [
+            'name' => 'A new team name'
+        ])
+        ->assertForbidden();
+});

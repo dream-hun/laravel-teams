@@ -16,6 +16,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/teams/{team}/set_current', [TeamController::class, 'setCurrent'])
         ->name('team.set-current');
 
+    Route::get('/team', [TeamController::class, 'edit'])
+        ->name('team.edit');
+
+    Route::patch('/team/{team}', [TeamController::class, 'update'])
+        ->name('team.update');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

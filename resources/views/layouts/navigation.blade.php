@@ -65,7 +65,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')" class="font-semibold">
+                        <x-dropdown-link :href="route('team.edit')" class="font-semibold">
                             Team settings
                         </x-dropdown-link>
 
