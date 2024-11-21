@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\TeamsPermission;
 use App\Models\Team;
 use App\Models\User;
 use function Pest\Laravel\actingAs;
@@ -48,6 +49,23 @@ it('can not update if not in team', function () {
 
     actingAs($user)
         ->patch(route('team.update', $anotherUser->currentTeam), [
+            'name' => 'A new team name'
+        ])
+        ->assertForbidden();
+});
+
+it('can not update a team without permission', function () {
+    $user = User::factory()->create();
+
+    $user->teams()->attach(
+        $anotherTeam = Team::factory()->create()
+    );
+
+    setPermissionsTeamId($anotherTeam->id);
+
+    actingAs($user)
+        ->withoutMiddleware(TeamsPermission::class)
+        ->patch(route('team.update', $anotherTeam), [
             'name' => 'A new team name'
         ])
         ->assertForbidden();
