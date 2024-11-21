@@ -14,6 +14,17 @@
                     </div>
                 </div>
             @endcan
+
+            @can('leave', $team)
+                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div class="max-w-xl">
+                        <form action="{{ route('team.leave', $team) }}" method="post">
+                            @csrf
+                            <x-danger-button>Leave team</x-danger-button>
+                        </form>
+                    </div>
+                </div>
+            @endcan
         </div>
     </div>
 </x-app-layout>

@@ -20,4 +20,13 @@ class TeamPolicy
 
         return $user->can('update team');
     }
+
+    public function leave(User $user, Team $team)
+    {
+        if (!$user->teams->contains($team)) {
+            return false;
+        }
+
+        return $user->teams->count() >= 2;
+    }
 }
