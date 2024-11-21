@@ -17,3 +17,15 @@ it('switches the current team for the user', function () {
 
     expect($user->currentTeam->id)->toBe($team->id);
 });
+
+it('can not switch to a team that the user does not belong to', function () {
+    $user = User::factory()->create();
+
+    $anotherTeam = Team::factory()->create();
+
+    actingAs($user)
+        ->patch(route('team.set-current', $anotherTeam))
+        ->assertForbidden();
+
+    expect($user->currentTeam->id)->not->toBe($anotherTeam->id);
+});
