@@ -12,6 +12,9 @@ class UserObserver
         $user->teams()->attach(
             $team = Team::create(['name' => $user->name])
         );
+
+        $user->currentTeam()->associate($team);
+        $user->save();
     }
 
     public function deleting(User $user)

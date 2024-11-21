@@ -23,3 +23,12 @@ it('removes all team attachments when deleted', function () {
 
     assertDatabaseEmpty('team_user');
 });
+
+it('sets the current team to the personal team', function () {
+    $user = User::factory()->create([
+        'name' => 'Alex'
+    ]);
+
+    expect($user->current_team_id)
+        ->toBe($user->teams->first()->id);
+});
