@@ -11,4 +11,9 @@ class Team extends Model
     use HasFactory;
 
     protected $guarded = false;
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

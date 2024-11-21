@@ -104,3 +104,16 @@ it('can not leave a team that we don\'t belong to', function () {
         ->post(route('team.leave', $anotherUser->currentTeam))
         ->assertForbidden();
 });
+
+it('should show a list of members', function () {
+    $user = User::factory()->create();
+
+    $user->currentTeam->members()->attach(
+        $members = User::factory()->times(2)->create()
+    );
+
+    actingAs($user)
+        ->get('/team')
+        ->assertSeeText($members->pluck('email')->toArray())
+        ->assertSeeText($members->pluck('name')->toArray());
+});
