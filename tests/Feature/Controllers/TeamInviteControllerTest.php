@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\TeamsPermission;
 use App\Models\Team;
 use App\Models\TeamInvite;
 use App\Models\User;
@@ -66,4 +67,21 @@ it('creates invite if email already invited to another team', function () {
             'email' => $email
         ])
         ->assertValid();
+});
+
+it('fails to send invite without permission', function () {
+    $user = User::factory()->create();
+
+    $user->teams()->attach(
+        $anotherTeam = Team::factory()->create()
+    );
+
+    setPermissionsTeamId($anotherTeam->id);
+
+    actingAs($user)
+        ->withoutMiddleware(TeamsPermission::class)
+        ->post(route('team.invites.store', $anotherTeam), [
+            'email' => 'mabel@codecourse.com'
+        ])
+        ->assertForbidden();
 });
