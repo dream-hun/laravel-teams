@@ -15,13 +15,15 @@
             </x-slot>
 
             <x-slot name="content">
-                <x-dropdown-link>
-                    <form action="{{ route('team.members.destroy', [$team, $member]) }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">Remove from team</button>
-                    </form>
-                </x-dropdown-link>
+                @can('removeTeamMember', [auth()->user()->currentTeam, $member])
+                    <x-dropdown-link>
+                        <form action="{{ route('team.members.destroy', [$team, $member]) }}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Remove from team</button>
+                        </form>
+                    </x-dropdown-link>
+                @endcan
 
                 <x-dropdown-link href="">
                     Change team member role

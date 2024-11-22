@@ -32,6 +32,10 @@ class TeamPolicy
 
     public function removeTeamMember(User $user, Team $team, User $member)
     {
+        if ($user->id === $member->id) {
+            return false;
+        }
+
         if ($team->members->doesntContain($member)) {
             return false;
         }

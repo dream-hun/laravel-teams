@@ -37,3 +37,11 @@ it('can not remove a member from the team without permission', function () {
         ->delete(route('team.members.destroy', [$user->currentTeam, $member]))
         ->assertForbidden();
 });
+
+it('can not remove self from team', function () {
+    $user = User::factory()->create();
+
+    actingAs($user)
+        ->delete(route('team.members.destroy', [$user->currentTeam, $user]))
+        ->assertForbidden();
+});
