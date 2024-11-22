@@ -51,4 +51,9 @@ class TeamPolicy
 
         return $user->can('invite to team');
     }
+
+    public function revokeInvite(User $user, Team $team)
+    {
+        return $user->can('revoke invitation');
+    }
 }

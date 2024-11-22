@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 
 afterEach(function () {
    Str::createRandomStringsNormally();
@@ -83,5 +84,42 @@ it('fails to send invite without permission', function () {
         ->post(route('team.invites.store', $anotherTeam), [
             'email' => 'mabel@codecourse.com'
         ])
+        ->assertForbidden();
+});
+
+it('can revoke an invite', function () {
+    $user = User::factory()->create();
+
+    $invite = TeamInvite::factory()->create([
+        'team_id' => $user->currentTeam->id
+    ]);
+
+    actingAs($user)
+        ->delete(route('team.invites.destroy', [$user->currentTeam, $invite]))
+        ->assertRedirect('/team');
+
+    assertDatabaseMissing('team_invites', [
+        'team_id' => $user->currentTeam->id,
+        'token' => $invite->token,
+        'email' => $invite->email,
+    ]);
+});
+
+it('can not revoke an invite without permission', function () {
+    $user = User::factory()->create();
+
+    $user->teams()->attach(
+        $anotherTeam = Team::factory()->create()
+    );
+
+    $invite = TeamInvite::factory()->create([
+        'team_id' => $anotherTeam->id
+    ]);
+
+    setPermissionsTeamId($anotherTeam);
+
+    actingAs($user)
+        ->withoutMiddleware(TeamsPermission::class)
+        ->delete(route('team.invites.destroy', [$user->currentTeam, $invite]))
         ->assertForbidden();
 });

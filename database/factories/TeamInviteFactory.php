@@ -17,6 +17,7 @@ class TeamInviteFactory extends Factory
     public function definition(): array
     {
         return [
+            'email' => fake()->email,
             'token' => str()->random(30)
         ];
     }
