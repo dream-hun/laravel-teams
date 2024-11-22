@@ -29,4 +29,13 @@ class TeamPolicy
 
         return $user->teams->count() >= 2;
     }
+
+    public function removeTeamMember(User $user, Team $team, User $member)
+    {
+        if ($team->members->doesntContain($member)) {
+            return false;
+        }
+
+        return $user->can('remove team members');
+    }
 }

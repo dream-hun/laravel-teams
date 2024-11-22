@@ -15,8 +15,12 @@
             </x-slot>
 
             <x-slot name="content">
-                <x-dropdown-link href="">
-                    Remove team member
+                <x-dropdown-link>
+                    <form action="{{ route('team.members.destroy', [$team, $member]) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Remove from team</button>
+                    </form>
                 </x-dropdown-link>
 
                 <x-dropdown-link href="">

@@ -12,7 +12,7 @@
     <div class="mt-6">
         <ul class="divide-y divide-gray-100">
             @foreach($team->members as $member)
-                <x-team-member-item :member="$member" />
+                <x-team-member-item :team="$team" :member="$member" />
             @endforeach
         </ul>
     </div>
