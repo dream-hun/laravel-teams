@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TeamMemberDestroyRequest;
+use App\Http\Requests\TeamMemberUpdateRequest;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class TeamMemberController extends Controller
         return redirect()->route('team.edit');
     }
 
-    public function update(Request $request, Team $team, User $user)
+    public function update(TeamMemberUpdateRequest $request, Team $team, User $user)
     {
         if ($request->has('role')) {
             tap($team->members->find($user), function (User $member) use ($request) {

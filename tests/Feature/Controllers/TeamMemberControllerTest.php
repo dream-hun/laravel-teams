@@ -85,3 +85,50 @@ it('only updates role if provided', function () {
     expect($member->hasRole('team member'))->toBeTrue()
         ->and($member->roles->count())->toBe(1);
 });
+
+it('does not update the role if no permission', function () {
+    $user = User::factory()->create();
+
+    $user->currentTeam->members()->attach(
+        $anotherUser = User::factory()->create()
+    );
+
+    setPermissionsTeamId($user->currentTeam->id);
+    $anotherUser->assignRole('team member');
+
+    actingAs($anotherUser)
+        ->withoutMiddleware(TeamsPermission::class)
+        ->patch(route('team.members.update', [$user->currentTeam, $user]), [
+            'role' => 'team member'
+        ])
+        ->assertForbidden();
+});
+
+it('does not update the user if they are not in the team', function () {
+    $user = User::factory()->create();
+    $anotherUser = User::factory()->create();
+
+    actingAs($user)
+        ->patch(route('team.members.update', [$user->currentTeam, $anotherUser]), [
+            'role' => 'team member'
+        ])
+        ->assertForbidden();
+});
+
+it('validates the role to make sure it exists', function () {
+    $user = User::factory()->create();
+
+    $user->currentTeam->members()->attach(
+        $member = User::factory()->create()
+    );
+
+    setPermissionsTeamId($user->currentTeam->id);
+    $member->assignRole('team member');
+
+    actingAs($user)
+        ->patch(route('team.members.update', [$user->currentTeam, $member]), [
+            'role' => 'some wrong role'
+        ])
+        ->assertInvalid()
+        ->assertSessionHasErrors(['role']);
+});
