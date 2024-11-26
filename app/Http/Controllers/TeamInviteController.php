@@ -33,6 +33,17 @@ class TeamInviteController extends Controller
 
     public function accept(Request $request)
     {
-        dd($request->token);
+        $invite = TeamInvite::where('token', $request->token)->firstOrFail();
+
+        $request->user()->teams()->attach($invite->team);
+
+        setPermissionsTeamId($invite->team->id);
+        $request->user()->assignRole('team member');
+
+        $request->user()->currentTeam()->associate($invite->team)->save();
+
+        $invite->delete();
+
+        return redirect()->route('dashboard');
     }
 }
