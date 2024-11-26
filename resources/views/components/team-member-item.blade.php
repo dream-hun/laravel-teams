@@ -45,8 +45,9 @@
 
     @can('changeMemberRole', [auth()->user()->currentTeam, $member])
         <x-modal name="change-member-{{ $member->id }}-role" focusable>
-            <form method="post" action="" class="p-6">
+            <form method="post" action="{{ route('team.members.update', [$team, $member]) }}" class="p-6">
                 @csrf
+                @method('PATCH')
 
                 <h2 class="text-lg font-medium text-gray-900">
                     Change role for {{ $member->name }} ({{ $member->email }})

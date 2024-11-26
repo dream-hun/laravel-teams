@@ -17,4 +17,16 @@ class TeamMemberController extends Controller
 
         return redirect()->route('team.edit');
     }
+
+    public function update(Request $request, Team $team, User $user)
+    {
+        if ($request->has('role')) {
+            tap($team->members->find($user), function (User $member) use ($request) {
+                $member->roles()->detach();
+                $member->assignRole($request->role);
+            });
+        }
+
+        return back();
+    }
 }

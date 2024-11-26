@@ -30,6 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/team/{team}/members/{user}', [TeamMemberController::class, 'destroy'])
         ->name('team.members.destroy');
 
+    Route::patch('/team/{team}/members/{user}', [TeamMemberController::class, 'update'])
+        ->name('team.members.update');
+
     Route::post('/team/{team}/invites', [TeamInviteController::class, 'store'])
         ->name('team.invites.store');
 

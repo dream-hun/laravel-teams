@@ -45,3 +45,43 @@ it('can not remove self from team', function () {
         ->delete(route('team.members.destroy', [$user->currentTeam, $user]))
         ->assertForbidden();
 });
+
+it('updates a role', function () {
+    $user = User::factory()->create();
+
+    $user->currentTeam->members()->attach(
+        $member = User::factory()->createQuietly()
+    );
+
+    setPermissionsTeamId($user->currentTeam->id);
+    $member->assignRole('team member');
+
+    actingAs($user)
+        ->patch(route('team.members.update', [$user->currentTeam, $member]), [
+            'role' => 'team admin'
+        ])
+        ->assertRedirect();
+
+    expect($member->hasRole('team admin'))->toBeTrue()
+        ->and($member->roles->count())->toBe(1);
+});
+
+it('only updates role if provided', function () {
+    $user = User::factory()->create();
+
+    $user->currentTeam->members()->attach(
+        $member = User::factory()->createQuietly()
+    );
+
+    setPermissionsTeamId($user->currentTeam->id);
+    $member->assignRole('team member');
+
+    actingAs($user)
+        ->patch(route('team.members.update', [$user->currentTeam, $member]), [
+            //
+        ])
+        ->assertRedirect();
+
+    expect($member->hasRole('team member'))->toBeTrue()
+        ->and($member->roles->count())->toBe(1);
+});
