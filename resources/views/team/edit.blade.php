@@ -15,7 +15,7 @@
                 </div>
             @endcan
 
-                @can('view team members', $team)
+                @can('viewTeamMembers', $team)
                     <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <div class="max-w-xl">
                             @include('team.partials.team-members')

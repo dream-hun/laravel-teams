@@ -16,7 +16,7 @@
             @endforeach
         </ul>
 
-        @can('invite to team')
+        @can('inviteToTeam', $team)
             <ul class="divide-y divide-gray-100">
                 @foreach($team->invites as $invite)
                     <x-team-invite-item :invite="$invite" />
@@ -25,7 +25,7 @@
         @endcan
     </div>
 
-    @can('invite to team')
+    @can('inviteToTeam', $team)
         <form method="post" action="{{ route('team.invites.store', $team) }}" class="mt-6 space-y-6">
             @csrf
 
