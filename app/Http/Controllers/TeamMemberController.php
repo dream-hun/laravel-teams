@@ -15,6 +15,7 @@ class TeamMemberController extends Controller
         $team->members()->detach($user);
 
         $user->currentTeam()->associate($user->teams()->first())->save();
+        $user->roles()->detach();
 
         return redirect()->route('team.edit');
     }
