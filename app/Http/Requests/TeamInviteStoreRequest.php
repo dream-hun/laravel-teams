@@ -26,6 +26,7 @@ class TeamInviteStoreRequest extends FormRequest
         return [
             'email' => [
                 'required',
+                'email',
                 'max:255',
                 Rule::unique(TeamInvite::class, 'email')
                     ->where('team_id', $this->team->id)

@@ -49,6 +49,16 @@ it('requires an email address', function () {
         ->assertSessionHasErrors('email');
 });
 
+it('requires an valid email address', function () {
+    $user = User::factory()->create();
+
+    actingAs($user)
+        ->post(route('team.invites.store', $user->currentTeam), [
+            'email' => 'abc'
+        ])
+        ->assertSessionHasErrors('email');
+});
+
 it('fails to create invite if email already used', function () {
     $user = User::factory()->create();
 
