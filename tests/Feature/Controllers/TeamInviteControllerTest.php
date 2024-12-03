@@ -31,7 +31,7 @@ it('creates an invite', function () {
 
     Mail::assertSent(TeamInvitation::class, function (TeamInvitation $mail) use ($email) {
         return  $mail->hasTo($email) &&
-                $mail->teamInvite->token = 'abc';
+                $mail->teamInvite->token === 'abc';
     });
 
     assertDatabaseHas('team_invites', [
