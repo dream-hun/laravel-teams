@@ -61,4 +61,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Team::class, 'current_team_id');
     }
+
+    public function projects()
+    {
+        return $this->hasManyThrough(
+            Project::class,
+            TeamUser::class,
+            'user_id',
+            'team_id',
+            'id',
+            'team_id'
+        );
+    }
 }

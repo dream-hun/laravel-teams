@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function __invoke()
+    public function __invoke(Request $request)
     {
         return view('dashboard', [
             'projects' => team()->projects,
+            'allProjects' => $request->user()->projects()->with('team')->get(),
         ]);
     }
 }
