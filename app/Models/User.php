@@ -15,6 +15,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
     use HasRoles;
 
     /**
@@ -49,7 +50,7 @@ class User extends Authenticatable
 
     public function profilePhotoUrl()
     {
-        return 'https://gravatar.com/avatar/' . md5($this->email) . '?s=100';
+        return 'https://gravatar.com/avatar/'.md5($this->email).'?s=100';
     }
 
     public function teams()
