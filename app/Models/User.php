@@ -55,7 +55,9 @@ class User extends Authenticatable
 
     public function teams()
     {
-        return $this->belongsToMany(Team::class);
+        return $this->belongsToMany(Team::class)
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     public function currentTeam()
@@ -73,5 +75,23 @@ class User extends Authenticatable
             'id',
             'team_id'
         );
+    }
+
+    public function belongsToTeam($team): bool
+    {
+        return $this->teams()->where('team_id', $team->id)->exists();
+    }
+
+    public function hasTeamPermission($team, string $permission): bool
+    {
+        if ($this->hasRole('admin')) {
+            return true;
+        }
+
+        $teamUser = $this->teams()
+            ->where('team_id', $team->id)
+            ->first();
+
+        return $teamUser && $teamUser->pivot->role === 'admin';
     }
 }
